@@ -27,6 +27,11 @@ class CustomUserManager(BaseUserManager):
         
 # CREATING CUSTOM USER BECAUSE WE WANT TO USE EMAIL AS USERNAME
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4, 
+        editable=False
+    )
     email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=255)
     # IS_STAFF & IS_SUPERUSER ARE USE TO WHILE CREATING SUPERUSER

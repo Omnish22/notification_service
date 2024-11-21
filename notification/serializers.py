@@ -2,11 +2,11 @@ from rest_framework import serializers
 from .models import Notification, Tasks
 from django.contrib.auth.models import User
 
-class Notification(serializers.ModelSerializer):
+class SerializeNotification(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = ['id', 'user_id', 'type', 'status', 'content', 'created_at']
+        fields = ['user_id', 'type', 'status', 'content']
     
     def validate_user_id(self, user_id):
         if not User.objects.filter(id=user_id):
@@ -39,3 +39,27 @@ class Notification(serializers.ModelSerializer):
             if key not in content:
                 raise serializers.ValidationError(f"Key is missing : {key}")
         return content
+    
+
+class SerializeTasks(serializers.ModelField):
+    class Meta:
+        model = Tasks
+        fields = ['notification_id', 'status', 'result']
+
+    def validate_notification_id(self, id):
+        if not isinstance(id, serializers.UUIDField):
+            raise serializers.ValidationError("Invalid NotificationID")
+        return id
+    
+    def validate_status(self, status):
+        valid_status = [status[0] for status in Notification.Status.choices]
+        if status not in valid_status:
+            raise serializers.ValidationError("Invalid Status")
+        return status
+    
+    def validate_result(self, result):
+        if not isinstance(result,dict):
+            raise serializers.ValidationError("Invalid Result Type")
+        return result
+    
+    

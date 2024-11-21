@@ -13,20 +13,26 @@ services:
       POSTGRES_PASSWORD: ${POSTGRESPASSWORD}
       POSTGRES_HOST: ${POSTGRESHOST}
     ports:
-      - "${POSTGRESPORT}:${POSTGRESPORT}"
+      - "5432:5432"
   
   django:
     build: .
-    command: "python3 manage.py runserver 0.0.0.0:8080"
+    command: >
+      sh -c "python3 manage.py makemigrations &&
+            python3 manage.py migrate &&
+            python3 manage.py runserver 0.0.0.0:8080"
     ports:
       - 8080:8080
+    environment:
+      - POSTGRESDB=${POSTGRESDB}
+      - POSTGRESUSER=${POSTGRESUSER}
+      - POSTGRESPASSWORD=${POSTGRESPASSWORD}
+      - POSTGRESCONTAINER=${POSTGRESCONTAINER}
+      - POSTGRESPORT=${POSTGRESPORT}
     depends_on:
       - postgres
     volumes:
       - .:/app
-
-
-
 
 
 volumes:
