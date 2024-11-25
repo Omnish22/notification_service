@@ -3,4 +3,4 @@ from .models import Notification, Tasks
 # Register your models here.
 
 admin.site.register(Notification)
-admin.site.register(Tasks)
+admin.site.register(Tasks)              

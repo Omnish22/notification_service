@@ -17,12 +17,23 @@ class Status(models.TextChoices):
 
 # NOTIFICATIONS
 class Notification(models.Model):
+    # Create your models here.
+    class Type(models.TextChoices):
+        EMAIL='email'
+        SMS='sms'
+        PUSH='push'
+
+    class Status(models.TextChoices):
+        PENDING='pending'
+        SENT='sent'
+        FAILED='failed'
+        
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notification')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notification')
     type = models.CharField(max_length=20, choices=Type.choices)
     status = models.CharField(max_length=20, choices=Status.choices)
     content = models.JSONField(default=dict, blank=True)
-    created_at = models.DateTimeField(auto_created=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     metadata = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
@@ -38,6 +49,11 @@ class Notification(models.Model):
 
 # NOTIFICATION PREFRENCES
 class Tasks(models.Model):
+    class Status(models.TextChoices):
+        PENDING='pending'
+        SENT='sent'
+        FAILED='failed'
+        
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     notification_id = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name='tasks')
     status = models.CharField(max_length=20, choices=Status.choices)
