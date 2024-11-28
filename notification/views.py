@@ -16,7 +16,6 @@ class NotificationView(APIView):
             serializer = SerializeNotification(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-
             
 
         except serializers.ValidationError as e:
