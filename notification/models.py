@@ -38,7 +38,7 @@ class Notification(models.Model):
     metadata = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
-        return f"Notification {self.id} for {self.user.email}"
+        return f"{self.user.email} - {self.status} - {self.id}"
     
     def clean(self):
         if self.type == 'sms' and 'phone_number' not in self.metadata:
@@ -60,4 +60,7 @@ class Tasks(models.Model):
     )
     result = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.status} - {self.id}"
 

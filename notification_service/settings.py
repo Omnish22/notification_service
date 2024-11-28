@@ -138,3 +138,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+CELERY_BROKER_URL = 'pyamqp://guest@rabbitmq//'  # RabbitMQ broker URL
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'   # Redis as the result backend
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'

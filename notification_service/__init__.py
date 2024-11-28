@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
-load_dotenv()
+from .celery import app as celery_app
 
-print(str(os.getenv('POSTGRESDB')), os.getenv('POSTGRESUSER'), os.getenv('POSTGRESPASSWORD'), os.getenv('POSTGRESHOST'), os.getenv('POSTGRESPORT'))
+load_dotenv()
+__all__ = ('celery_app',)
