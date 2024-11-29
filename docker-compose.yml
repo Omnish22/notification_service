@@ -20,7 +20,7 @@ services:
     command: >
       sh -c "python3 manage.py makemigrations &&
             python3 manage.py migrate &&
-            python3 manage.py runserver 0.0.0.0:8080"
+            uvicorn notification_service.asgi:application --host 0.0.0.0 --port 8080"
     ports:
       - 8080:8080
     environment:
@@ -57,6 +57,17 @@ services:
     depends_on:
       - rabbitmq
       - redis
+  
+  sms_service:
+    build:
+      context: .
+      dockerfile: workers/sms/Dockerfile
+    container_name: sms_container
+    depends_on:
+      - rabbitmq
+      - redis
+
+    
 
 
 

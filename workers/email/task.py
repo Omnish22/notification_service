@@ -18,7 +18,7 @@ def send_email_task():
             em = EmailMessage()
             em['From'] = os.getenv('MAILSENDER') 
             em['Subject'] = "Alert Notification"
-            sending_to = ["omnish22@gmail.com"]
+            sending_to = [os.getenv("SENDINGTO")]
             em['To'] = ", ".join(sending_to)
 
             notification = Notification.objects.get(id=task.notification_id.id)
