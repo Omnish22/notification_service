@@ -34,6 +34,7 @@ def send_email_task():
             with smtplib.SMTP_SSL(os.getenv('MAILSERVICE'), os.getenv('MAILPORT'), context=context) as smtp:
                 smtp.login(os.getenv('MAILSENDER'),os.getenv('MAILPASSWORD'))
                 smtp.send_message(em)
+            print(f"Message sent Subject: Alert Notification  Content: {notification.content.get('msg')}")
             task.status = Notification.Status.SENT
             task.save()
             notification.status =  Notification.Status.SENT
