@@ -25,6 +25,7 @@ class Notification(models.Model):
 
     class Status(models.TextChoices):
         PENDING='pending'
+        IN_PROGRESS = 'inprogress'
         SENT='sent'
         FAILED='failed'
         
@@ -37,7 +38,7 @@ class Notification(models.Model):
     metadata = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
-        return f"Notification {self.id} for {self.user.email}"
+        return f"{self.user.email} - {self.status} - {self.id}"
     
     def clean(self):
         if self.type == 'sms' and 'phone_number' not in self.metadata:
@@ -49,14 +50,17 @@ class Notification(models.Model):
 
 # NOTIFICATION PREFRENCES
 class Tasks(models.Model):
-    class Status(models.TextChoices):
-        PENDING='pending'
-        SENT='sent'
-        FAILED='failed'
         
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     notification_id = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name='tasks')
-    status = models.CharField(max_length=20, choices=Status.choices)
+    status = models.CharField(
+        max_length=20,
+        choices=Notification.Status.choices,
+        default=Notification.Status.PENDING
+    )
     result = models.JSONField(default=dict)
-    created_at = models.DateTimeField(auto_created=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.status} - {self.id}"
 
